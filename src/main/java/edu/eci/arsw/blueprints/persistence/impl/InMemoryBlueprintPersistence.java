@@ -28,21 +28,24 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
     private final Map<Tuple<String,String>,Blueprint> blueprints=new ConcurrentHashMap<>();
 
     public InMemoryBlueprintPersistence() {
-        //load stub data
+        //load stub data - al menos 3 planos con 2 asociados al mismo autor
         Point[] pts1 = new Point[]{new Point(200, 200), new Point(180, 180), new Point(160, 160)};
         Point[] pts2 = new Point[]{new Point(300, 250), new Point(275, 230), new Point(250, 220)};
         Point[] pts3 = new Point[]{new Point(400, 350), new Point(380, 340), new Point(360, 330)};
         Point[] pts4 = new Point[]{new Point(150, 200), new Point(145, 200), new Point(320, 270)};
+        Point[] pts5 = new Point[]{new Point(100, 100), new Point(120, 120), new Point(140, 140)};
 
-        Blueprint bp1=new Blueprint("Juan", "p1",pts1);
-        Blueprint bp2=new Blueprint("Rodrigo", "p2",pts2);
-        Blueprint bp3=new Blueprint("Nicolas", "p3",pts3);
-        Blueprint bp4=new Blueprint("Homero", "p4",pts4);
+        Blueprint bp1=new Blueprint("juan", "casa",pts1);
+        Blueprint bp2=new Blueprint("juan", "edificio",pts2);  // Segundo plano del mismo autor
+        Blueprint bp3=new Blueprint("maria", "parque",pts3);
+        Blueprint bp4=new Blueprint("carlos", "puente",pts4);
+        Blueprint bp5=new Blueprint("ana", "teatro",pts5);
 
         blueprints.put(new Tuple<>(bp1.getAuthor(),bp1.getName()), bp1);
         blueprints.put(new Tuple<>(bp2.getAuthor(),bp2.getName()), bp2);
         blueprints.put(new Tuple<>(bp3.getAuthor(),bp3.getName()), bp3);
         blueprints.put(new Tuple<>(bp4.getAuthor(),bp4.getName()), bp4);
+        blueprints.put(new Tuple<>(bp5.getAuthor(),bp5.getName()), bp5);
 
     }
     
@@ -50,10 +53,7 @@ public class InMemoryBlueprintPersistence implements BlueprintsPersistence{
     public void saveBlueprint(Blueprint bp) throws BlueprintPersistenceException {
         if (blueprints.putIfAbsent(new Tuple<>(bp.getAuthor(),bp.getName()), bp) != null){
             throw new BlueprintPersistenceException("The given blueprint already exists: "+bp);
-        }
-        else{
-            blueprints.put(new Tuple<>(bp.getAuthor(),bp.getName()), bp);
-        }        
+        }     
     }
 
     @Override

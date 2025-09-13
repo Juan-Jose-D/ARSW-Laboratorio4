@@ -7,6 +7,7 @@
 package edu.eci.arsw.blueprints.services;
 
 import edu.eci.arsw.blueprints.model.Blueprint;
+import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
 // ...existing code...
@@ -50,8 +51,11 @@ public class BlueprintsServices {
         Blueprint bp = bpp.getBlueprint(author, name);
         if (bp == null)
             throw new BlueprintNotFoundException("Blueprint not found");
-        bp.setPoints(blueprintFilter.filter(bp.getPoints()));
-        return bp;
+        
+        // Crear una copia del blueprint para evitar modificar el original
+        Blueprint filteredBp = new Blueprint(bp.getAuthor(), bp.getName(), bp.getPoints().toArray(new Point[0]));
+        filteredBp.setPoints(blueprintFilter.filter(filteredBp.getPoints()));
+        return filteredBp;
     }
 
     /**
@@ -76,8 +80,7 @@ public class BlueprintsServices {
         } catch (BlueprintNotFoundException e) {
             return java.util.Collections.emptySet();
         }
-        Set<String> authors = allBlueprints.stream().map(Blueprint::getAuthor).collect(java.util.stream.Collectors.toSet());
-        return authors;
+        return allBlueprints.stream().map(Blueprint::getAuthor).collect(java.util.stream.Collectors.toSet());
     }
 
 }

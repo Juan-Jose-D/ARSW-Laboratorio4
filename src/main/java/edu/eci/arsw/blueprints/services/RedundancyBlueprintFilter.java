@@ -32,15 +32,14 @@ public class RedundancyBlueprintFilter implements BlueprintFilter {
             filteredPoints.add(originalPoints.get(0));
         }
 
-
         for (int i = 1; i < originalPoints.size(); i++) {
             if (!originalPoints.get(i).equals(originalPoints.get(i - 1))) {
                 filteredPoints.add(originalPoints.get(i));
             }
         }
 
-        bp.setPoints(filteredPoints);
-        return bp;
+        // Crear una copia del blueprint para evitar modificar el original
+        return new Blueprint(bp.getAuthor(), bp.getName(), filteredPoints.toArray(new Point[0]));
     }
 
     @Override

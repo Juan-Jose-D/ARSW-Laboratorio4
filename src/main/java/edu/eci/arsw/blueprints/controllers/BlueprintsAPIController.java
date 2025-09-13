@@ -39,7 +39,7 @@ public class BlueprintsAPIController {
             return new ResponseEntity<>(blueprints, HttpStatus.ACCEPTED);
         } catch (BlueprintNotFoundException e) {
             Logger.getLogger(BlueprintsAPIController.class.getName()).log(Level.SEVERE, null, e);
-            return new ResponseEntity<>("Error al obtener los planos. ", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Error al obtener los planos", HttpStatus.NOT_FOUND);
         }
     }
 
@@ -55,13 +55,13 @@ public class BlueprintsAPIController {
     }
 
     @RequestMapping(value = "/{author}", method = RequestMethod.GET)
-    public ResponseEntity<Set<Blueprint>> getBlueprintsByAuthor(@PathVariable String author) {
+    public ResponseEntity<?> getBlueprintsByAuthor(@PathVariable String author) {
         try {
             Set<Blueprint> blueprints = blueprintsServices.getBlueprintsByAuthor(author);
             return new ResponseEntity<>(blueprints, HttpStatus.ACCEPTED);
         } catch (BlueprintNotFoundException e) {
             Logger.getLogger(BlueprintsAPIController.class.getName()).log(Level.SEVERE, null, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Autor no encontrado: " + author, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -74,14 +74,14 @@ public class BlueprintsAPIController {
     }
 
     @RequestMapping(value = "/{author}/{bpname}", method = RequestMethod.GET)
-    public ResponseEntity<Blueprint> getBlueprintsByAuthorAndBpname(@PathVariable String author,
+    public ResponseEntity<?> getBlueprintsByAuthorAndBpname(@PathVariable String author,
             @PathVariable String bpname) {
         try {
             Blueprint blueprint = blueprintsServices.getBlueprint(author, bpname);
             return new ResponseEntity<>(blueprint, HttpStatus.ACCEPTED);
         } catch (BlueprintNotFoundException e) {
             Logger.getLogger(BlueprintsAPIController.class.getName()).log(Level.SEVERE, null, e);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Plano no encontrado: " + author + "/" + bpname, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -92,10 +92,10 @@ public class BlueprintsAPIController {
             @RequestBody Blueprint updatedBlueprint) {
         try {
             blueprintsServices.updateBlueprint(author, bpname, updatedBlueprint);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
         } catch (BlueprintNotFoundException e) {
             Logger.getLogger(BlueprintsAPIController.class.getName()).log(Level.SEVERE, null, e);
-            return new ResponseEntity<>("Plano no encontrado", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Plano no encontrado: " + author + "/" + bpname, HttpStatus.NOT_FOUND);
         }
     }
 }

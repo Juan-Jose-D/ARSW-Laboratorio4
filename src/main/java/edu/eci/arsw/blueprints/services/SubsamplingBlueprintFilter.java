@@ -32,8 +32,8 @@ public class SubsamplingBlueprintFilter implements BlueprintFilter {
             }
         }
 
-        bp.setPoints(filteredPoints);
-        return bp;
+        // Crear una copia del blueprint para evitar modificar el original
+        return new Blueprint(bp.getAuthor(), bp.getName(), filteredPoints.toArray(new Point[0]));
     }
 
     @Override
